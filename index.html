@@ -1,0 +1,285 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:12px}
+h2{font-size:16px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px}
+.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.toolbar button{font-size:13px;padding:6px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer}
+.toolbar button:hover{background:var(--color-background-secondary)}
+.toolbar button.primary{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info);font-weight:500}
+.univ-list{display:flex;flex-direction:column;gap:8px}
+.univ-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary)}
+.univ-card-header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;user-select:none}
+.univ-card-header .num{font-size:12px;color:var(--color-text-secondary);min-width:24px}
+.univ-card-header .uname{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.univ-card-header .actions{display:flex;gap:6px}
+.univ-card-header .actions button{font-size:12px;padding:3px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.univ-card-header .actions button:hover{background:var(--color-background-secondary)}
+.univ-card-header .actions button.del:hover{background:var(--color-background-danger);color:var(--color-text-danger);border-color:var(--color-border-danger)}
+.univ-card-body{padding:12px;display:none;flex-direction:column;gap:10px}
+.univ-card-body.open{display:flex}
+.field-row{display:flex;flex-direction:column;gap:4px}
+.field-row label{font-size:12px;color:var(--color-text-secondary)}
+.field-row input{font-size:13px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);width:100%}
+.sections-wrap{display:flex;flex-direction:column;gap:8px}
+.section-item{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;background:var(--color-background-secondary);display:flex;flex-direction:column;gap:6px}
+.section-row{display:flex;gap:8px;align-items:center}
+.section-row input{font-size:12px;padding:5px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)}
+.section-row select{font-size:12px;padding:5px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)}
+.section-row .lbl-input{flex:1}
+.items-wrap{display:flex;flex-direction:column;gap:4px;padding-left:4px}
+.item-row{display:flex;gap:6px;align-items:center}
+.item-row input{flex:1;font-size:12px;padding:4px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)}
+.item-row button{font-size:11px;padding:3px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;white-space:nowrap}
+.item-row button:hover{background:var(--color-background-danger);color:var(--color-text-danger)}
+.small-btn{font-size:11px;padding:3px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;align-self:flex-start}
+.small-btn:hover{background:var(--color-background-secondary)}
+.sec-del{font-size:11px;padding:3px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;align-self:flex-end}
+.sec-del:hover{background:var(--color-background-danger);color:var(--color-text-danger)}
+.chevron{font-size:14px;color:var(--color-text-secondary);transition:transform 0.2s}
+.chevron.open{transform:rotate(90deg)}
+</style>
+
+<h2 class="sr-only">2028 대학 입시 정보 편집기</h2>
+
+<div class="toolbar">
+  <button class="primary" onclick="exportHTML()"><i class="ti ti-download" aria-hidden="true"></i> HTML 다운로드</button>
+  <button onclick="addUniv()"><i class="ti ti-plus" aria-hidden="true"></i> 대학 추가</button>
+</div>
+
+<div class="univ-list" id="univList"></div>
+
+<script>
+const labelTypes=[
+  {val:"label-susi",label:"수시 (주황)"},{val:"label-jeongsi",label:"정시 (파랑)"},
+  {val:"label-nonsel",label:"논술 (빨강)"},{val:"label-suneung",label:"수능최저 (초록)"},
+  {val:"label-hakjong",label:"학종 (보라)"},{val:"label-gita",label:"기타 (회색)"},
+  {val:"label-myeon",label:"면접 (노랑)"}
+];
+
+let universities=[
+  {num:1,name:"서울대학교",sections:[{label:"수시",type:"label-susi",items:["면접 강화(학생부 기반, 역량평가 반영)","면접 유형: 조제토론, 교육계열, 융합과제"]},{label:"정시",type:"label-jeongsi",items:["지역균형 전형 폐지","일반: 수능 60+교과역량평가 40"]},{label:"수능최저",type:"label-suneung",items:["수시 모든 전형 수능최저 미적용"]},{label:"기타",type:"label-gita",items:["(수)의과대: 교과역량 20+적성·인성면접 20"]}]},
+  {num:2,name:"연세대학교",sections:[{label:"수시",type:"label-susi",items:["교과추천: 1단계 교과 80+서류 20","학생부 종합: 성도 30%"]},{label:"수능최저",type:"label-suneung",items:["수능최저 신설","일정: 수능 전 → 수능 이후","전 모집단위 3개합 60이내(국·수 포함) 등"]},{label:"기타",type:"label-gita",items:["종합전형 구조 개편(통합)"]}]},
+  {num:3,name:"고려대학교",sections:[{label:"수시",type:"label-susi",items:["교과(학교추천): 교과 80+서류 20","학생부 종합: 면접(일반/자연), 이유의자"]},{label:"학종(학업우수)",type:"label-hakjong",items:["1단계 서류 100(5배수) → 면접 20%","수능최저 완화(인문/자연 4개합 9이내)"]},{label:"정시",type:"label-jeongsi",items:["일반: 표준점수 / 교과우수 등: 백분위","영어, 한국사 등급별 감점"]},{label:"기타",type:"label-gita",items:["교과·학종 중복지원 제한 폐지"]}]},
+  {num:4,name:"서강대학교",sections:[{label:"수시",type:"label-susi",items:["교과 90+출결 10","동생 80+성도 10+출결 10"]},{label:"학종(일반인)",type:"label-hakjong",items:["수능최저 신설","국, 수, 영, 탐(1) 중 3개합 7이내, 한 4"]},{label:"논술",type:"label-nonsel",items:["논술 80+교과 10+출결 10"]},{label:"수능최저",type:"label-suneung",items:["수능 지역균형: 수능 80+교과 10+출결 10"]},{label:"정시",type:"label-jeongsi",items:["일반전형: 수능 100"]}]},
+  {num:5,name:"성균관대학교",sections:[{label:"수시",type:"label-susi",items:["정량평가 70(공통 35+선택 35)+정성 30","졸업예정자만 지원 가능"]},{label:"학종(성인인재)",type:"label-hakjong",items:["모집단위 확대(222명)","사회과학계열, 공학계열 추가"]},{label:"수능최저",type:"label-suneung",items:["전 모집단위: 사/과 2개 등급 분리","의예과: 사/과 2개 등급 평균"]},{label:"정시",type:"label-jeongsi",items:["일반전형+특화정원 선발","군별 반영비율 및 지표 변경"]}]},
+  {num:6,name:"한양대학교",sections:[{label:"수시 교과",type:"label-susi",items:["추천형: 교과 60+교과정성평가 40","자연/이성: 3개 각 30내, 인문 등: 3개 각 30내"]},{label:"학종 면접형",type:"label-hakjong",items:["1단계 서류 100(7배수) → 면접 30%","모집단위 확대, 수능최저 미적용"]},{label:"논술",type:"label-nonsel",items:["논술 90+학생부(출결) 10"]},{label:"정시",type:"label-jeongsi",items:["수능 90+학생부종합평가 10"]}]},
+  {num:7,name:"중앙대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과 100 → 교과 90+서류 10","추천인원: 1~2 재적수의 5%"]},{label:"학종",type:"label-hakjong",items:["탈무형 신설(면접없음)","기존 학종 수능최저적용 유지"]},{label:"논술",type:"label-nonsel",items:["논술 100 → 논술 90+학생부 10","수능 전 실시"]},{label:"정시",type:"label-jeongsi",items:["다반치(인문/자연) 유지","탐구 2과목 백분위 적용"]}]},
+  {num:8,name:"경희대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과 100 → 교과 90+서류 10"]},{label:"수시 학종",type:"label-susi",items:["수능최저: 인문/자연 3개합 7, 의학 4개합 5"]},{label:"학종",type:"label-hakjong",items:["네오르네상스: 전형·면접 방식 변경","고른기회전형 모집단위 확대"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 전 유지"]},{label:"정시",type:"label-jeongsi",items:["일반전형: 표준점수","고른기회/사회기여자: 백분위(변환표준점수)"]}]},
+  {num:9,name:"한국외국어대학교",sections:[{label:"수시",type:"label-susi",items:["서류 100 → 1단계(서류 100, 3~4배수)+2단계(서류 70+면접 30)"]},{label:"면접",type:"label-myeon",items:["면접 유형: 제시문 기반, 심층질문","(전 모집단위 공통)"]},{label:"수능최저",type:"label-suneung",items:["전 모집단위 적용(3개합 7이내 등)"]},{label:"정시",type:"label-jeongsi",items:["수능 100(탐구 2과목 백분위 평균)"]}]},
+  {num:10,name:"서울시립대학교",sections:[{label:"수시",type:"label-susi",items:["교과 100 → 교과 80+서류 20"]},{label:"수능최저",type:"label-suneung",items:["수능최저 적용(3개합 7이내 등)"]},{label:"학종",type:"label-hakjong",items:["면접형 수능최저 면제(3개합 8이내)","서류형 폐지 → 면접으로 통합"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["단일 전형 수능 100(탐구 2과목 평균)"]}]},
+  {num:11,name:"건국대학교",sections:[{label:"수시 교과",type:"label-susi",items:["KU지역균형: 교과 100 → 교과 80+서류 20","수능최저: 인문/자연 3개합 7, 의학 4개합 5"]},{label:"학종",type:"label-hakjong",items:["KU기초추천: 면접형/서류형 분리","면접형 단계(서류 100, 3배수)+면접"]},{label:"논술",type:"label-nonsel",items:["논술 100 → 논술 80+교과 20"]},{label:"정시",type:"label-jeongsi",items:["일반/지역균형 모두 수능 100","(탐구 변환표준 점수)"]}]},
+  {num:12,name:"동국대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과 70+출결 30 → 교과 60+비교과 40","수능최저: 인문/자연 3개합 8(한국사 포함)"]},{label:"학종",type:"label-hakjong",items:["DoDream전형: 면접형 확대","사회통합/특성화 전형 유지"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["일반전형 수능 100(표준점수)","탐구 변환표준점수+가산점 적용"]}]},
+  {num:13,name:"홍익대학교",sections:[{label:"수시",type:"label-susi",items:["학교추천전형: 교과 100(정성평가 포함)","수능최저: 3개합 8, 한 4"]},{label:"학종",type:"label-hakjong",items:["학생부종합: 면접 유무 전형으로 운영","예술계열 별도 실기/면접 평가"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["일반전형 수능 100(탐구 변환표준점수)","예술계열 실기 반영"]}]},
+  {num:14,name:"숙명여자대학교",sections:[{label:"수시",type:"label-susi",items:["교과 90+서류 10 → 교과 80+서류 20"]},{label:"학종",type:"label-hakjong",items:["숙명인재(면접형): 1단계(서류 100)+면접","숙명인재(서류형): 서류 100"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["일반전형 수능 100(탐구 2과목 백분위)"]}]},
+  {num:15,name:"이화여자대학교",sections:[{label:"수시",type:"label-susi",items:["교과추천전형: 교과 80+서류 20"]},{label:"학종",type:"label-hakjong",items:["미래인재(서류형): 서류 100","면접형: 1단계 서류 → 2단계 면접"]},{label:"논술",type:"label-nonsel",items:["교과기여: 논술+학생부 반영(교과)"]},{label:"정시",type:"label-jeongsi",items:["수전형: 수능 100","수능+학생부진로: 수능 85+학생부 15"]}]},
+  {num:16,name:"새 대학교 (추가됨)",sections:[{label:"수시",type:"label-susi",items:["내용을 입력하세요"]},{label:"정시",type:"label-jeongsi",items:["내용을 입력하세요"]}]}
+];
+
+function getData(){
+  return [...document.querySelectorAll('.univ-card')].map((card,i)=>({
+    num:i+1,
+    name:card.querySelector('.name-input').value,
+    sections:[...card.querySelectorAll('.section-item')].map(si=>({
+      label:si.querySelector('.lbl-input').value,
+      type:si.querySelector('select').value,
+      items:[...si.querySelectorAll('.item-input')].map(ii=>ii.value).filter(v=>v.trim())
+    }))
+  }));
+}
+
+function renderAll(){
+  const list=document.getElementById('univList');
+  list.innerHTML='';
+  universities.forEach(u=>renderCard(u));
+}
+
+function renderCard(u){
+  const list=document.getElementById('univList');
+  const div=document.createElement('div');
+  div.className='univ-card';
+  const secsHTML=u.sections.map(s=>`
+    <div class="section-item">
+      <div class="section-row">
+        <input class="lbl-input" value="${s.label}" placeholder="라벨명" style="width:100px">
+        <select>${labelTypes.map(t=>`<option value="${t.val}"${t.val===s.type?' selected':''}>${t.label}</option>`).join('')}</select>
+        <button class="sec-del" onclick="delSection(this)"><i class="ti ti-trash" aria-hidden="true"></i> 삭제</button>
+      </div>
+      <div class="items-wrap">${s.items.map(it=>`<div class="item-row"><input class="item-input" value="${it}" placeholder="내용 입력"><button onclick="delItem(this)">삭제</button></div>`).join('')}</div>
+      <button class="small-btn" onclick="addItem(this)"><i class="ti ti-plus" aria-hidden="true"></i> 항목 추가</button>
+    </div>`).join('');
+  div.innerHTML=`
+    <div class="univ-card-header" onclick="toggleCard(this)">
+      <span class="num">${u.num}</span>
+      <span class="uname">${u.name}</span>
+      <div class="actions">
+        <button onclick="moveUp(event,this)"><i class="ti ti-arrow-up" aria-hidden="true"></i></button>
+        <button onclick="moveDown(event,this)"><i class="ti ti-arrow-down" aria-hidden="true"></i></button>
+        <button class="del" onclick="delUniv(event,this)"><i class="ti ti-trash" aria-hidden="true"></i> 삭제</button>
+      </div>
+      <i class="ti ti-chevron-right chevron" aria-hidden="true"></i>
+    </div>
+    <div class="univ-card-body">
+      <div class="field-row"><label>대학명</label><input class="name-input" value="${u.name}" placeholder="대학명 입력"></div>
+      <div class="sections-wrap">${secsHTML}</div>
+      <button class="small-btn" onclick="addSection(this)"><i class="ti ti-plus" aria-hidden="true"></i> 섹션 추가</button>
+    </div>`;
+  list.appendChild(div);
+}
+
+function toggleCard(header){
+  const body=header.nextElementSibling;
+  const chev=header.querySelector('.chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+  if(body.classList.contains('open')){
+    const uname=header.querySelector('.uname');
+    body.querySelector('.name-input').addEventListener('input',e=>uname.textContent=e.target.value);
+  }
+}
+function addItem(btn){
+  const wrap=btn.previousElementSibling;
+  const row=document.createElement('div');
+  row.className='item-row';
+  row.innerHTML=`<input class="item-input" placeholder="내용 입력"><button onclick="delItem(this)">삭제</button>`;
+  wrap.appendChild(row);
+}
+function delItem(btn){btn.closest('.item-row').remove()}
+function delSection(btn){btn.closest('.section-item').remove()}
+function addSection(btn){
+  const wrap=btn.previousElementSibling;
+  const div=document.createElement('div');
+  div.className='section-item';
+  div.innerHTML=`
+    <div class="section-row">
+      <input class="lbl-input" value="수시" placeholder="라벨명" style="width:100px">
+      <select>${labelTypes.map(t=>`<option value="${t.val}">${t.label}</option>`).join('')}</select>
+      <button class="sec-del" onclick="delSection(this)"><i class="ti ti-trash" aria-hidden="true"></i> 삭제</button>
+    </div>
+    <div class="items-wrap"><div class="item-row"><input class="item-input" placeholder="내용 입력"><button onclick="delItem(this)">삭제</button></div></div>
+    <button class="small-btn" onclick="addItem(this)"><i class="ti ti-plus" aria-hidden="true"></i> 항목 추가</button>`;
+  wrap.appendChild(div);
+}
+function addUniv(){
+  universities=getData();
+  universities.push({num:universities.length+1,name:"새 대학교",sections:[{label:"수시",type:"label-susi",items:["내용 입력"]}]});
+  renderAll();
+  const cards=document.querySelectorAll('.univ-card');
+  const last=cards[cards.length-1];
+  last.querySelector('.univ-card-header').click();
+  last.scrollIntoView({behavior:'smooth'});
+}
+function delUniv(e,btn){e.stopPropagation();btn.closest('.univ-card').remove();renumber()}
+function moveUp(e,btn){e.stopPropagation();const c=btn.closest('.univ-card'),p=c.previousElementSibling;if(p){c.parentNode.insertBefore(c,p);renumber()}}
+function moveDown(e,btn){e.stopPropagation();const c=btn.closest('.univ-card'),n=c.nextElementSibling;if(n){c.parentNode.insertBefore(n,c);renumber()}}
+function renumber(){document.querySelectorAll('.univ-card').forEach((c,i)=>c.querySelector('.num').textContent=i+1)}
+
+function exportHTML(){
+  const data=getData();
+  const count=data.length;
+  const univJS=JSON.stringify(data,null,2);
+  const html=`<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2028 대입 핵심 변화</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:#f0f4f8;padding:12px;font-size:11px}
+.container{background:white;border-radius:12px;padding:14px;max-width:1100px;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.header{text-align:center;margin-bottom:14px;position:relative}
+.header .by-smart{font-size:10px;color:#555;margin-bottom:2px}
+.header h1{font-size:22px;font-weight:900;color:#1a1a2e}
+.header h1 span.red{color:#e03030}
+.header h1 span.blue{color:#1565c0}
+.header .subtitle{font-size:12px;color:#444;margin-top:4px}
+.header .subtitle span{color:#e03030;font-weight:700}
+.icon-row{position:absolute;right:0;top:0;display:flex;gap:6px}
+.icon-badge{background:#e8f4ff;border:1px solid #90caf9;border-radius:6px;padding:3px 7px;font-size:9px;color:#1565c0;font-weight:700}
+.icon-badge.green{background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32}
+.icon-badge.orange{background:#fff3e0;border-color:#ffcc80;color:#e65100}
+.icon-badge.purple{background:#f3e5f5;border-color:#ce93d8;color:#6a1b9a}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}
+.card{border:1.5px solid #ddd;border-radius:8px;overflow:hidden;background:white}
+.card-header{padding:6px 8px;font-weight:900;font-size:12px;color:white;display:flex;align-items:center;gap:5px}
+.card-header .num{opacity:.85;font-size:10px}
+.section{border-top:1px solid #eee;padding:5px 7px}
+.section:first-child{border-top:none}
+.section-label{font-size:9px;font-weight:700;border-radius:3px;padding:1px 5px;display:inline-block;margin-bottom:3px}
+.label-susi{background:#fff3e0;color:#e65100}
+.label-jeongsi{background:#e3f2fd;color:#1565c0}
+.label-nonsel{background:#fce4ec;color:#c62828}
+.label-suneung{background:#e8f5e9;color:#2e7d32}
+.label-hakjong{background:#f3e5f5;color:#6a1b9a}
+.label-gita{background:#f5f5f5;color:#555}
+.label-myeon{background:#fff8e1;color:#f57f17}
+.section-content{font-size:9.5px;color:#333;line-height:1.5}
+.section-content .bullet{display:flex;align-items:flex-start;gap:3px;margin-bottom:1px}
+.section-content .bullet::before{content:'•';color:#999;flex-shrink:0}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.bottom-card{border:1.5px solid #ddd;border-radius:8px;overflow:hidden}
+.bottom-card-header{padding:6px 10px;font-weight:900;font-size:11px;color:white;text-align:center}
+.bg-blue{background:linear-gradient(135deg,#1565c0,#1976d2)}
+.bg-green{background:linear-gradient(135deg,#2e7d32,#388e3c)}
+.bg-red{background:linear-gradient(135deg,#c62828,#e53935)}
+.bottom-card-body{padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.bottom-item{background:#f8f9fa;border-radius:6px;padding:5px 7px;font-size:9.5px}
+.bottom-item .bi-title{font-weight:700;color:#1565c0;margin-bottom:2px;font-size:10px}
+.bottom-item.red .bi-title{color:#c62828}
+.bottom-item.orange .bi-title{color:#e65100}
+.bottom-item.purple .bi-title{color:#6a1b9a}
+.bottom-item.green .bi-title{color:#2e7d32}
+.strategy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px}
+.strategy-item{background:#f8f9fa;border-radius:6px;padding:5px 7px;font-size:9.5px;text-align:center}
+.strategy-item .si-icon{font-size:14px;margin-bottom:2px}
+.strategy-item .si-title{font-weight:700;color:#333;font-size:10px;margin-bottom:1px}
+.note{margin-top:8px;font-size:9px;color:#666;text-align:center;padding:5px;background:#fffde7;border-radius:5px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <div class="by-smart">제작: 상근쌤&nbsp;&nbsp;편집: 뀨</div>
+  <h1><span class="blue">2028 대입</span> <span class="red">주요대학+영남권 대학 핵심 변화 한눈에 보기</span><span style="font-size:14px;color:#555;font-weight:700">(${count}개 대학)</span></h1>
+  <p class="subtitle">"입시는 구조가 바뀐다. <span>전략</span>이 합격을 만든다."</p>
+  <div class="icon-row">
+    <span class="icon-badge">📋 수시</span>
+    <span class="icon-badge orange">🏆 정시</span>
+    <span class="icon-badge green">✅ 수능최저</span>
+    <span class="icon-badge purple">👤 면접·평가</span>
+  </div>
+</div>
+<div class="grid" id="univGrid"></div>
+<div class="bottom-grid">
+  <div class="bottom-card"><div class="bottom-card-header bg-blue">📌 2028 대입 변화 핵심 포인트</div><div class="bottom-card-body"><div class="bottom-item"><div class="bi-title">👥 면접·평가 방식 확대</div>제시문 기반·융합형 면접 확대</div><div class="bottom-item red"><div class="bi-title">📄 교과·서류 비중 확대</div>정성평가 요소 증가</div><div class="bottom-item orange"><div class="bi-title">✅ 수능최저 변화</div>폐지·완화·유지 대학별 차이</div><div class="bottom-item purple"><div class="bi-title">📊 정시 구조 변화</div>교과역량 확대, 단계별 선발</div><div class="bottom-item green"><div class="bi-title">💰 점수 체계 다양화</div>표준점수 vs 백분위 병행</div><div class="bottom-item red"><div class="bi-title">⚠️ 감점 요소 유의</div>영어·한국사 감점 주의!</div></div></div>
+  <div class="bottom-card"><div class="bottom-card-header bg-green">🎯 합격 전략 가이드</div><div class="strategy-grid"><div class="strategy-item"><div class="si-icon">📚</div><div class="si-title">내신 강점</div>교과형 적극 활용!</div><div class="strategy-item"><div class="si-icon">🔍</div><div class="si-title">탐구·면접 강점</div>학생부종합/면접형 분석 필수!</div><div class="strategy-item"><div class="si-icon">🎯</div><div class="si-title">수능 강점</div>정시 전형별 구조 분석 필수!</div></div></div>
+  <div class="bottom-card"><div class="bottom-card-header bg-red">⚡ 지금 바로 전략적으로!</div><div style="padding:12px;text-align:center;font-size:11px;line-height:1.8"><div style="font-size:18px;font-weight:900;color:#c62828;margin-bottom:6px">변화를 이해한 학생이<br>전략을 가진 학생이다! ⭐</div><div style="background:#fff3e0;border-radius:6px;padding:6px;font-weight:700;color:#e65100">지금부터<br>전략적으로 준비하자!</div></div></div>
+</div>
+<div class="note">※ 상기 내용은 2028학년도 주요 ${count}개 대학의 입학전형계획(2027년 4월 기준)을 바탕으로 정리하였으며, 최종 모집요강은 변경될 수 있으니 반드시 각 대학 홈페이지를 통해 확인하세요!</div>
+</div>
+<script>
+const universities=${univJS};
+const colors=["linear-gradient(135deg,#1a237e,#283593)","linear-gradient(135deg,#1565c0,#1976d2)","linear-gradient(135deg,#b71c1c,#c62828)","linear-gradient(135deg,#880e4f,#ad1457)","linear-gradient(135deg,#4a148c,#6a1b9a)","linear-gradient(135deg,#1b5e20,#2e7d32)","linear-gradient(135deg,#e65100,#f57c00)","linear-gradient(135deg,#37474f,#546e7a)","linear-gradient(135deg,#004d40,#00695c)","linear-gradient(135deg,#bf360c,#d84315)","linear-gradient(135deg,#006064,#00838f)","linear-gradient(135deg,#33691e,#558b2f)","linear-gradient(135deg,#4527a0,#512da8)","linear-gradient(135deg,#880e4f,#c2185b)","linear-gradient(135deg,#1a237e,#3949ab)","linear-gradient(135deg,#00695c,#00897b)"];
+const grid=document.getElementById('univGrid');
+universities.forEach((u,i)=>{
+  const card=document.createElement('div');
+  card.className='card';
+  const secs=u.sections.map(s=>\`<div class="section"><span class="section-label \${s.type}">\${s.label}</span><div class="section-content">\${s.items.map(it=>\`<div class="bullet">\${it}</div>\`).join('')}</div></div>\`).join('');
+  card.innerHTML=\`<div class="card-header" style="background:\${colors[i%colors.length]}"><span class="num">\${u.num}.</span><span>\${u.name}</span></div><div class="card-body">\${secs}</div>\`;
+  grid.appendChild(card);
+});
+<\/script>
+</body>
+</html>`;
+
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='2028_university_guide.html';
+  a.click();
+}
+
+renderAll();
+</script>
