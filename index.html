@@ -62,21 +62,21 @@ const labelTypes=[
 ];
 
 let universities=[
-  {num:1,name:"서울대학교",sections:[{label:"수시",type:"label-susi",items:["면접 강화(학생부 기반, 역량평가 반영)","면접 유형: 주제토론, 문제풀이, 융합과제"]},{label:"정시",type:"label-jeongsi",items:["정시 지역균형 전형 폐지(수시 지역균형은 유지)","일반: 수능 60+교과역량평가 40"]},{label:"수능최저",type:"label-suneung",items:["수시 모든 전형 수능최저 미적용"]},{label:"기타",type:"label-gita",items:["(수)의과대: 교과역량 20+적성·인성면접 20"]}]},
+  {num:1,name:"서울대학교",sections:[{label:"수시",type:"label-susi",items:["면접 강화(학생부 기반, 핵심역량평가 반영)","면접 유형: 주제토론, 문제풀이, 융합과제"]},{label:"정시",type:"label-jeongsi",items:["정시 지역균형 전형 폐지(수시 지역균형은 유지)","일반: 수능 60+교과역량평가 40"]},{label:"수능최저",type:"label-suneung",items:["수시 모든 전형 수능최저 미적용"]},{label:"기타",type:"label-gita",items:["(수)의과대: 교과역량 20+적성·인성면접 20"]}]},
   {num:2,name:"연세대학교",sections:[{label:"수시",type:"label-susi",items:["교과추천: 1단계 교과 80+서류 20","교과 반영: 등급 70%+성취도 30%"]},{label:"논술",type:"label-nonsel",items:["수능최저 신설","논술 일정: 수능 전 → 수능 이후"]},{label:"수능최저",type:"label-suneung",items:["전 모집단위 3개합 6이내(국·수 포함) 등"]},{label:"기타",type:"label-gita",items:["종합전형 구조 개편(통합)"]}]},
-  {num:3,name:"고려대학교",sections:[{label:"수시",type:"label-susi",items:["교과(학교추천): 교과 80+서류 20","학생부 종합: 수능최저 폐지(일반/자연), 의학과 유지"]},{label:"논술",type:"label-nonsel",items:["논술전형 신설: 논술 100%, 수능최저 적용"]},{label:"학종(학업우수)",type:"label-hakjong",items:["1단계 서류 100(5배수) → 면접 20%","수능최저 완화(인문/자연 4개합 9이내)"]},{label:"정시",type:"label-jeongsi",items:["일반: 표준점수 / 교과우수 등: 백분위","영어, 한국사 등급별 감점"]},{label:"기타",type:"label-gita",items:["교과·학종 중복지원 제한 폐지"]}]},
-  {num:4,name:"서강대학교",sections:[{label:"수시",type:"label-susi",items:["교과 90+출결 10"]},{label:"학종(일반Ⅱ)",type:"label-hakjong",items:["등급 80+성취도 10+출결 10","수능최저 신설","국, 수, 영, 탐(1) 중 3개합 7이내, 한 4"]},{label:"논술",type:"label-nonsel",items:["논술 80+교과 10+출결 10"]},{label:"정시",type:"label-jeongsi",items:["지역균형전형: 수능 80+교과 10+출결 10","일반전형: 수능 100"]}]},
+  {num:3,name:"고려대학교",sections:[{label:"수시",type:"label-susi",items:["교과(학교추천): 교과 80+서류 20","학생부 종합: 수능최저 폐지(일반/자연), 의학과 유지"]},{label:"논술",type:"label-nonsel",items:["논술 100%","4합 8,한4"]},{label:"학종(학업우수)",type:"label-hakjong",items:["1단계 서류 100(5배수) → 면접 20%","수능최저 완화(인문/자연 4개합 9이내)"]},{label:"정시",type:"label-jeongsi",items:["일반: 표준점수 / 교과우수 등: 백분위","영어, 한국사 등급별 감점"]},{label:"기타",type:"label-gita",items:["교과·학종 중복지원 제한 폐지"]}]},
+  {num:4,name:"서강대학교",sections:[{label:"수시",type:"label-susi",items:["교과 90+출결 10","등급 80+성취도 10+출결 10"]},{label:"학종(일반Ⅱ)",type:"label-hakjong",items:["수능최저 신설","국, 수, 영, 탐(1) 중 3개합 7이내, 한 4"]},{label:"논술",type:"label-nonsel",items:["논술 80+교과 10+출결 10"]},{label:"정시",type:"label-jeongsi",items:["지역균형전형: 수능 80+교과 10+출결 10","일반전형: 수능 100"]}]},
   {num:5,name:"성균관대학교",sections:[{label:"수시",type:"label-susi",items:["정량평가 70(공통 35+선택 35)+정성 30","졸업예정자만 지원 가능"]},{label:"학종(성균인재)",type:"label-hakjong",items:["모집단위 확대(222명)","사회과학계열, 공학계열 추가"]},{label:"수능최저",type:"label-suneung",items:["전 모집단위: 사/과 2개 등급 분리","의예과: 사/과 2개 등급 평균"]},{label:"정시",type:"label-jeongsi",items:["일반전형+특화형 선발","군별 반영비율 및 지표 변경"]}]},
   {num:6,name:"한양대학교",sections:[{label:"수시 교과",type:"label-susi",items:["추천형: 교과 60+교과정성평가 40","자연/상경: 3개 각 3이내, 인문 등: 3개 각 3이내"]},{label:"학종 면접형",type:"label-hakjong",items:["1단계 서류 100(7배수) → 면접 30%","모집단위 확대, 수능최저 미적용"]},{label:"논술",type:"label-nonsel",items:["논술 90+학생부(출결) 10"]},{label:"정시",type:"label-jeongsi",items:["수능 90+학생부종합평가 10"]}]},
   {num:7,name:"중앙대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과 100 → 교과 90+서류 10","추천인원: 고1~2 재적수의 5%"]},{label:"학종",type:"label-hakjong",items:["탐구형 신설(면접있음)","기존 학종 수능최저적용 유지"]},{label:"논술",type:"label-nonsel",items:["논술 100 → 논술 90+학생부 10","수능 전 실시"]},{label:"정시",type:"label-jeongsi",items:["다빈치형(인문/자연) 유지","탐구 2과목 백분위 적용"]}]},
-  {num:8,name:"경희대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과 100 → 교과 90+서류 10"]},{label:"수능최저",type:"label-suneung",items:["인문/자연 3개합 7이내, 의학 4개합 5이내"]},{label:"학종",type:"label-hakjong",items:["네오르네상스: 전형·면접 방식 변경","고른기회전형 모집단위 확대"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 전 유지"]},{label:"정시",type:"label-jeongsi",items:["일반전형: 표준점수","고른기회/사회기여자: 백분위(변환표준점수)"]}]},
+  {num:8,name:"경희대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과 100 → 교과 90+서류 10","수능최저: 인문/자연 3개합 7이내, 의학 4개합 5이내"]},{label:"학종",type:"label-hakjong",items:["네오르네상스: 전형·면접 방식 변경","고른기회전형 모집단위 확대"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 전 유지"]},{label:"정시",type:"label-jeongsi",items:["일반전형: 표준점수","고른기회/사회기여자: 백분위(변환표준점수)"]}]},
   {num:9,name:"한국외국어대학교",sections:[{label:"수시",type:"label-susi",items:["서류 100 → 1단계(서류 100, 3~4배수)+2단계(서류 70+면접 30)"]},{label:"면접",type:"label-myeon",items:["면접 유형: 제시문 기반, 심층질문","(전 모집단위 공통)"]},{label:"수능최저",type:"label-suneung",items:["전 모집단위 적용(3개합 7이내 등)"]},{label:"정시",type:"label-jeongsi",items:["수능 100(탐구 2과목 백분위 평균)"]}]},
-  {num:10,name:"서울시립대학교",sections:[{label:"수시",type:"label-susi",items:["교과 100 → 교과 80+서류 20"]},{label:"수능최저",type:"label-suneung",items:["교과전형 수능최저: 3개합 7이내 등 적용"]},{label:"학종",type:"label-hakjong",items:["면접형 수능최저 면제(3개합 8이내)","서류형 폐지 → 면접으로 통합"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["단일 전형 수능 100(탐구 2과목 평균)"]}]},
+  {num:10,name:"서울시립대학교",sections:[{label:"수시",type:"label-susi",items:["교과 100 → 교과 80+서류 20","수능 최저 적용(3개합 7이내 등)"]},{label:"학종",type:"label-hakjong",items:["면접형 수능최저 면제(3개합 8이내)","서류형 폐지 → 면접으로 통합"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["단일 전형 수능 100(탐구 2과목 평균)"]}]},
   {num:11,name:"건국대학교",sections:[{label:"수시 교과",type:"label-susi",items:["KU지역균형: 교과 100 → 교과 80+서류 20","수능최저: 인문/자연 3개합 7, 의학 4개합 5"]},{label:"학종",type:"label-hakjong",items:["KU자기추천: 면접형/서류형 분리","면접형 단계(서류 100, 3배수)+면접"]},{label:"논술",type:"label-nonsel",items:["논술 100 → 논술 80+교과 20"]},{label:"정시",type:"label-jeongsi",items:["일반/지역균형 모두 수능 100","(탐구 변환표준 점수)"]}]},
   {num:12,name:"동국대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과 70+출결 30 → 교과 60+비교과 40","수능최저: 인문/자연 3개합 8(한국사 포함)"]},{label:"학종",type:"label-hakjong",items:["DoDream전형: 면접형 확대","사회통합/특성화 전형 유지"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["일반전형 수능 100(표준점수)","탐구 변환표준점수+가산점 적용"]}]},
-  {num:13,name:"홍익대학교",sections:[{label:"수시",type:"label-susi",items:["학교추천전형: 교과 100(정성평가 포함)","수능최저: 3개합 8, 한 4"]},{label:"학종",type:"label-hakjong",items:["학생부종합: 면접 유무 전형으로 운영","예술계열 별도 실기/면접 평가"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["일반전형 수능 100(탐구 변환표준점수)","예술계열 실기 반영"]}]},
-  {num:14,name:"숙명여자대학교",sections:[{label:"수시",type:"label-susi",items:["교과 90+서류 10 → 교과 80+서류 20"]},{label:"수능최저",type:"label-suneung",items:["수능최저 완화(3개합 8이내 등 완화)"]},{label:"학종",type:"label-hakjong",items:["숙명인재(면접형): 1단계(서류 100)+면접","숙명인재(서류형): 서류 100"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["일반전형 수능 100(탐구 2과목 백분위)"]}]},
-  {num:15,name:"이화여자대학교",sections:[{label:"수시",type:"label-susi",items:["교과추천전형: 교과 80+서류 20","교과추천전형 면접 폐지(2028 핵심 변화)"]},{label:"학종",type:"label-hakjong",items:["미래인재(서류형): 서류 100","면접형: 1단계 서류 → 2단계 면접","고른기회: 서류 100"]},{label:"논술",type:"label-nonsel",items:["논술: 논술+학생부 반영(교과)"]},{label:"정시",type:"label-jeongsi",items:["수능전형: 수능 100","수능+학생부전형: 수능 85+학생부 15"]}]},
+  {num:13,name:"홍익대학교",sections:[{label:"수시",type:"label-susi",items:["학교추천전형: 교과 100(정성평가 포함)","수능최저: 3개합 8, 한 4"]},{label:"학종",type:"label-hakjong",items:["학생부종합: 면접 유무 선택형으로 운영","예술계열 별도 실기/면접 평가"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["일반전형 수능 100(탐구 변환표준점수)","예술계열 실기 반영"]}]},
+  {num:14,name:"숙명여자대학교",sections:[{label:"수시",type:"label-susi",items:["교과 90+서류 10 → 교과 80+서류 20","수능최저 완화(3개합 8이내 등)"]},{label:"학종",type:"label-hakjong",items:["숙명인재(면접형): 1단계(서류 100)+면접","숙명인재(서류형): 서류 100"]},{label:"논술",type:"label-nonsel",items:["논술 일정: 수능 후"]},{label:"정시",type:"label-jeongsi",items:["일반전형 수능 100(탐구 2과목 백분위)"]}]},
+  {num:15,name:"이화여자대학교",sections:[{label:"수시",type:"label-susi",items:["교과추천전형: 교과 80+서류 20"]},{label:"학종",type:"label-hakjong",items:["미래인재(서류형): 서류 100","면접형: 1단계 서류 → 2단계 면접","고른기회: 서류 100"]},{label:"논술",type:"label-nonsel",items:["논술: 논술+학생부 반영(교과)"]},{label:"정시",type:"label-jeongsi",items:["수능전형: 수능 100","수능+학생부전형: 수능 85+학생부 15"]}]},
   {num:16,name:"부산대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과우수전형: 학생부 교과 80+학업역량평가 20","탐구전형 신설: 교과역량면접(현장녹화) 실시, 수능최저 미적용"]},{label:"학종",type:"label-hakjong",items:["서류전형 신설: 서류 100%(면접없음), 수능최저 적용","면접전형 면접비율 확대: 서류 80+면접 20 → 서류 70+면접 30","지역의사선발전형: 38명, 서류 70+면접 30"]},{label:"수능최저",type:"label-suneung",items:["의예·치의예: 수학포함 3개 영역 합 4이내","수의예·약학: 수학포함 3개 영역 합 5이내"]},{label:"논술",type:"label-nonsel",items:["논술전형 완전 폐지(지역인재논술 포함) — 부산대 최대 변경"]},{label:"정시",type:"label-jeongsi",items:["정시 학업충실도평가 확대: 수능 80+학업충실도평가 20","부산대-부산교대 통합 추진 중(사전 안내)"]}]},
   {num:17,name:"경북대학교",sections:[{label:"수시 교과",type:"label-susi",items:["교과우수자: 교과 80+교과이수충실도 20","지역인재: 교과 80+교과이수충실도 20(대구·경북 전 과정 이수)"]},{label:"학종",type:"label-hakjong",items:["일반학생: 서류 100%(5배수)","지역인재: 1단계 서류 100%(4~5배수), 2단계 서류 70+면접 30","지역의사선발: 33명, 수능최저 적용"]},{label:"논술",type:"label-nonsel",items:["논술(AAT): 논술 70+교과 30","수능최저 전 모집단위 적용"]},{label:"수능최저",type:"label-suneung",items:["의예·치의예: 수학포함 3개 합 4이내","수의예·약학: 수학포함 3개 합 5이내","생환대·과기대: 수능최저 없음"]},{label:"정시",type:"label-jeongsi",items:["일반학생(나군): 수능 90+교과 10(2028 변경)","예·체능: 수능+실기 반영"]}]},
   {num:18,name:"경상국립대학교",sections:[{label:"수시 교과",type:"label-susi",items:["일반전형: 교과 100","수의예과·의예과·약학과: 교과 80+정성평가 20 도입(기존 교과 100)","학생부교과 교과성적 반영방법 변경"]},{label:"학종",type:"label-hakjong",items:["학생부종합 면접고사 시행 모집단위 변경","지역인재전형: 경남·부산·울산 소재 전 과정 이수자"]},{label:"수능최저",type:"label-suneung",items:["수능최저학력기준 변경(모집단위별 상이)","간호학과: 2합 8"]},{label:"기타",type:"label-gita",items:["학교폭력 조치사항 감점: 1~7호 감점, 8~9호 부적격"]},{label:"정시",type:"label-jeongsi",items:["수능 반영(모집단위별 영역 구성 적용)","수시 수능최저 미충족 인원 정시 이월"]}]},
@@ -318,24 +318,23 @@ function setStatus(msg, color){
   if(color !== 'loading') setTimeout(()=>{ el.textContent=''; el.style.background=''; }, 3000);
 }
 
-async function saveData(){
+function saveData(){
   try {
     const data = getData();
     setStatus('저장 중…', 'loading');
-    const result = await window.storage.set(STORAGE_KEY, JSON.stringify(data));
-    if(result){ setStatus('✅ 저장 완료 (' + data.length + '개 대학)', 'ok'); }
-    else { setStatus('❌ 저장 실패', 'err'); }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    setStatus('✅ 저장 완료 (' + data.length + '개 대학)', 'ok');
   } catch(e) {
     setStatus('❌ 오류: ' + e.message, 'err');
   }
 }
 
-async function loadData(){
+function loadData(){
   try {
     setStatus('불러오는 중…', 'loading');
-    const result = await window.storage.get(STORAGE_KEY);
-    if(result && result.value){
-      universities = JSON.parse(result.value);
+    const val = localStorage.getItem(STORAGE_KEY);
+    if(val){
+      universities = JSON.parse(val);
       renderAll();
       setStatus('✅ 불러오기 완료 (' + universities.length + '개 대학)', 'ok');
     } else {
@@ -346,11 +345,11 @@ async function loadData(){
   }
 }
 
-async function autoLoad(){
+function autoLoad(){
   try {
-    const result = await window.storage.get(STORAGE_KEY);
-    if(result && result.value){
-      universities = JSON.parse(result.value);
+    const val = localStorage.getItem(STORAGE_KEY);
+    if(val){
+      universities = JSON.parse(val);
       renderAll();
       setStatus('✅ 자동 복원 완료', 'ok');
     } else {
@@ -366,5 +365,5 @@ document.addEventListener('keydown', e => {
   if((e.ctrlKey || e.metaKey) && e.key === 's'){ e.preventDefault(); saveData(); }
 });
 
-autoLoad();
+renderAll();
 </script>
